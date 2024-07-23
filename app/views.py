@@ -135,8 +135,25 @@ class RoomViewSet(viewsets.ModelViewSet):
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    @action(detail=True, methods=['get'], url_name='get_unrevised_tasks', url_path='get_unrevised_tasks')
+
+    @action(detail=True, methods=['get'], url_name='get_tasks', url_path='get_tasks')
     def get_tasks(self, request, pk):
+        try:
+            room = self.get_object()
+            tasks = Task.objects.filter(
+                room=room
+            ).distinct()
+            serializer = TaskSerializer(tasks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Task.DoesNotExist:
+            return Response({'error': 'No tasks found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+    @action(detail=True, methods=['get'], url_name='get_unrevised_tasks', url_path='get_unrevised_tasks')
+    def get_unrevised_tasks(self, request, pk):
         try:
             room = self.get_object()
             tasks = Task.objects.filter(
