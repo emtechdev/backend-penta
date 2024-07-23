@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-k2$mgumtve=yp%&1$lbj0an+&am@+q$)zvr^#)zpyazdnk=bnr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -50,15 +50,31 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-
+    'corsheaders.middleware.CorsMiddleware',  # Ensure CorsMiddleware is listed here
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "http://yourdomain.com",
+    "http://localhost:5173",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:5173',
+)
+
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 
 
 ROOT_URLCONF = 'penta.urls'

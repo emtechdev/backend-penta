@@ -11,10 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
-    def validate_password(self, value):
-        if User.objects.filter(password=value).exists():
-            raise serializers.ValidationError("This password is already in use.")
-        return value
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -80,7 +76,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ['room' , 'image', 'name','username'] 
+        fields = ['id' ,'room' , 'image', 'name','username'] 
 
 
 
@@ -97,11 +93,12 @@ class AssignSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     created_by = serializers.ReadOnlyField(source='created_by.username')
     room = serializers.ReadOnlyField(source='room.name')
+    room_id = serializers.ReadOnlyField(source='room.id')
     assigns = AssignSerializer(many=True, read_only=True, source='assign_set')
 
     class Meta:
         model = Task
-        fields = ('id', 'name', 'arabic_name', 'description', 'image', 'created_by', 'room', 'created', 'assigns')
+        fields = ('id', 'room_id', 'name', 'arabic_name', 'description', 'image', 'created_by', 'room', 'created', 'assigns')
 
     
 
